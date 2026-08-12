@@ -1,0 +1,22 @@
+# MATLAB autosave and temporary files
+*.asv
+*.m~
+*.autosave
+*.mex*
+*.p
+
+# MATLAB generated metadata and caches
+slprj/
+sccprj/
+codegen/
+*.mlproj
+*.prj
+
+# Generated results and logs
+*.log
+*.tmp
+*.bak
+
+# Operating-system files
+.DS_Store
+Thumbs.db
