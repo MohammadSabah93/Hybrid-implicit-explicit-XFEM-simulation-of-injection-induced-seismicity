@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "Please cite this software using the metadata in this file and cite the associated method article when available."
+title: "Hybrid IMEX XFEM for Injection-Induced Seismicity"
+type: software
+authors:
+  - family-names: Sabah
+    given-names: Mohammad
+repository-code: "https://github.com/MohammadSabah93/Hybrid-implicit-explicit-XFEM-simulation-of-injection-induced-seismicity"
+license: MIT
+keywords:
+  - injection-induced seismicity
+  - extended finite element method
+  - XFEM
+  - hydromechanical coupling
+  - dynamic rupture
+  - rate-and-state friction
+  - implicit-explicit time integration
