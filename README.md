@@ -3,10 +3,14 @@
 [![MATLAB](https://img.shields.io/badge/MATLAB-research%20code-e16737)](https://www.mathworks.com/products/matlab.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Research software](https://img.shields.io/badge/status-research%20software-4c1)](#scope-and-limitations)
+[![ORCID](https://img.shields.io/badge/ORCID-0000--0002--7260--6138-A6CE39)](https://orcid.org/0000-0002-7260-6138)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mohammad%20Sabah-0A66C2)](https://www.linkedin.com/in/mohammad-sabah)
 
-A MATLAB research implementation of a hybrid implicit–explicit (IMEX) strategy for two-dimensional coupled hydromechanical XFEM simulation of injection-induced fault slip and dynamic rupture.
+A MATLAB research implementation developed by **Mohammad Sabah** for a hybrid implicit–explicit (IMEX) strategy in two-dimensional coupled hydromechanical XFEM simulation of **injection-induced fault slip and dynamic rupture**.
 
 The formulation targets the strong timescale separation between slow reservoir pressurization and rapid fault acceleration. The mechanics are integrated implicitly during the quasi-static phase and switched to an explicit central-difference-type update once the maximum fault slip rate exceeds a prescribed threshold. During the explicit mechanical phase, pore pressure is advanced separately with a backward-Euler solve.
+
+The project sits at the intersection of computational geomechanics, induced seismicity, reservoir geomechanics, XFEM, rate-and-state friction, dynamic rupture, and coupled multiphysics simulation.
 
 ## Scientific scope
 
@@ -108,6 +112,13 @@ Please use [`CITATION.cff`](CITATION.cff) when citing the software. When the ass
 Related published formulation:
 
 > Sabah, M., Hofmann, H., Cacace, M., Jalali, M. R., & Kivi, I. R. (2026). Modeling injection-induced seismicity using a fully coupled poroviscoelasto-dynamic extended finite element approach with stabilized contact and rate-and-state friction. *Computers and Geotechnics, 191*, 107803. https://doi.org/10.1016/j.compgeo.2025.107803
+
+## Author
+
+**Mohammad Sabah, PhD**  
+Computational geomechanics · induced seismicity · coupled multiphysics · XFEM · rate-and-state friction  
+Technische Universität Berlin  
+[ORCID](https://orcid.org/0000-0002-7260-6138) · [LinkedIn](https://www.linkedin.com/in/mohammad-sabah) · [GitHub](https://github.com/MohammadSabah93)
 
 ## Contributing
 
