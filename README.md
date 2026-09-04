@@ -1,22 +1,37 @@
 # Hybrid IMEX XFEM for Injection-Induced Seismicity
 
-[![MATLAB](https://img.shields.io/badge/MATLAB-source%20code-e16737)](https://www.mathworks.com/products/matlab.html)
+[![MATLAB](https://img.shields.io/badge/MATLAB-research%20code-e16737)](https://www.mathworks.com/products/matlab.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Research software](https://img.shields.io/badge/status-research%20software-4c1)](#scope-and-limitations)
 
-A MATLAB implementation of a hybrid implicit–explicit (IMEX) time-integration strategy for fully coupled hydromechanical XFEM simulation of injection-induced fault slip.
+A MATLAB research implementation of a hybrid implicit–explicit (IMEX) strategy for two-dimensional coupled hydromechanical XFEM simulation of injection-induced fault slip and dynamic rupture.
 
-The framework is designed for the severe timescale separation between slow reservoir pressurization and rapid rupture. It combines implicit integration during the quasi-static response with explicit integration when the fault accelerates.
+The formulation targets the strong timescale separation between slow reservoir pressurization and rapid fault acceleration. The mechanics are integrated implicitly during the quasi-static phase and switched to an explicit central-difference-type update once the maximum fault slip rate exceeds a prescribed threshold. During the explicit mechanical phase, pore pressure is advanced separately with a backward-Euler solve.
 
-## Capabilities
+## Scientific scope
 
-- two-dimensional coupled poroelastic deformation and fluid flow;
+The code combines:
+
+- coupled poroelastic deformation and fluid flow;
 - XFEM representation of an embedded fault;
-- rate-and-state friction and nonlinear fault contact;
-- implicit–explicit switching based on the evolving fault response;
-- inertia and absorbing/damping boundary contributions;
-- matrix–fracture hydraulic coupling; and
-- post-processing of displacement, pressure, stress, slip, and seismicity measures.
+- matrix–fracture hydraulic coupling;
+- nonlinear fault contact;
+- rate-and-state friction;
+- inertia and dynamic boundary damping;
+- adaptive time stepping in the implicit regime;
+- slip-rate-based implicit/explicit switching; and
+- post-processing of displacement, pressure, stress, slip and seismicity metrics.
+
+The current implementation is intended for numerical-method development and research reproducibility rather than operational seismic-hazard forecasting.
+
+## Time-integration strategy
+
+The default driver uses two regimes:
+
+1. **Implicit regime** — Newmark-type mechanics with Newton–Raphson iterations for the coupled system.
+2. **Dynamic regime** — explicit mechanical update triggered when the peak fault slip rate exceeds `Vth`; pressure is then advanced with a backward-Euler step.
+
+The switching threshold and dynamic time step are defined in `X_FEM_PoroElastic_Im_Ex.m` and should be treated as numerical parameters requiring sensitivity analysis.
 
 ## Quick start
 
@@ -25,53 +40,70 @@ The framework is designed for the severe timescale separation between slow reser
 - MATLAB;
 - all repository `.m` files available on the MATLAB path.
 
-The code is a research prototype. A specific minimum MATLAB release and toolbox compatibility matrix have not yet been established.
+A minimum MATLAB release and toolbox compatibility matrix have not yet been formally established.
 
-### Run the example
+### Run the default case
 
-1. Clone or download this repository.
-2. Open the repository folder in MATLAB.
-3. Review the simulation setup:
-   - geometry, mesh, time stepping, and initial conditions in `X_FEM_PoroElastic_Im_Ex.m`;
-   - material, hydraulic, dynamic, and frictional properties in `defineModelParameters.m`;
-   - mechanical and hydraulic boundary conditions in `defineBoundaryConditions.m`.
-4. Run:
+```bash
+git clone https://github.com/MohammadSabah93/Hybrid-implicit-explicit-XFEM-simulation-of-injection-induced-seismicity.git
+cd Hybrid-implicit-explicit-XFEM-simulation-of-injection-induced-seismicity
+```
+
+Open the repository in MATLAB and run:
 
 ```matlab
 X_FEM_PoroElastic_Im_Ex
 ```
 
-The default case uses a 100 m × 100 m domain with an embedded diagonal fault. Because the simulation can transition to very small dynamic time steps, runtime and memory demand depend strongly on the chosen mesh and switching parameters.
+Before running, review:
+
+- geometry, mesh, initial conditions, time stepping and switching parameters in `X_FEM_PoroElastic_Im_Ex.m`;
+- material, hydraulic, dynamic and frictional parameters in `defineModelParameters.m`;
+- mechanical and hydraulic boundary conditions in `defineBoundaryConditions.m`.
+
+The default example uses a 100 m × 100 m domain with an embedded diagonal fault. Runtime depends strongly on mesh resolution, dynamic time step and the duration of the explicit phase.
 
 ## Code map
 
 | Component | Main files |
 |---|---|
-| Driver and time integration | `X_FEM_PoroElastic_Im_Ex.m` |
+| Driver and IMEX integration | `X_FEM_PoroElastic_Im_Ex.m` |
 | Parameters and boundary conditions | `defineModelParameters.m`, `defineBoundaryConditions.m` |
 | Mesh and XFEM enrichment | `MeshGeneration_2D.m`, `levelSet.m`, `enrElem.m` |
-| Coupled matrix assembly | `StiffnessMatrix.m`, `MassMatrix.m`, `StorageMatrix.m`, `ConductanceMatrix.m`, `CouplingMatrix.m` |
+| Matrix assembly | `StiffnessMatrix.m`, `MassMatrix.m`, `StorageMatrix.m`, `ConductanceMatrix.m`, `CouplingMatrix.m` |
 | Fault contact and friction | `Interface.m`, `Lagrange.m`, `StabLagrange.m`, `updateInterface.m`, `updateInterface_expilict.m` |
+| Matrix–fracture flow coupling | `interface_flow.m`, `CouplingInterface.m` |
 | Dynamic boundaries and seismicity | `dampingBoundary.m`, `SeismicityParameters.m` |
 | Visualization | `postProcess.m` |
 
-## Scope and limitations
+## Reproducibility notes
 
-This repository is intended for scientific development and reproducible numerical experimentation, not operational seismic-hazard forecasting.
+For quantitative studies, users should document and test at least:
+
+- mesh resolution;
+- implicit and explicit time-step limits;
+- slip-rate switching threshold `Vth`;
+- nonlinear convergence tolerance;
+- rate-and-state friction parameters;
+- damping parameters; and
+- boundary-condition sensitivity.
+
+A robust scientific use of the code should include mesh- and time-step-convergence studies and comparison against an appropriate reference solution or benchmark.
+
+## Scope and limitations
 
 Current limitations include:
 
 - a two-dimensional idealized configuration;
-- input parameters defined directly in MATLAB source files;
+- model parameters defined directly in MATLAB source files;
 - no packaged automated verification suite;
-- no guaranteed compatibility across MATLAB releases; and
-- no formal software release or semantic version tag yet.
-
-Users should perform independent verification, mesh and time-step convergence studies, and site-specific calibration before interpreting results physically.
+- no guaranteed compatibility across MATLAB releases;
+- no semantic-versioned software release yet; and
+- explicit mechanics coupled to a separately solved implicit pressure step rather than a fully explicit multiphysics update.
 
 ## Citation
 
-Please use the repository’s [`CITATION.cff`](CITATION.cff) metadata when citing the software. When the associated IMEX-method article is published, its bibliographic details should be added to both this section and the citation file.
+Please use [`CITATION.cff`](CITATION.cff) when citing the software. When the associated IMEX-method article is published, its final bibliographic information should be added here and to the citation file.
 
 Related published formulation:
 
@@ -79,7 +111,7 @@ Related published formulation:
 
 ## Contributing
 
-Bug reports, reproducibility feedback, and focused improvements are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening an issue or pull request.
+Bug reports, reproducibility feedback and focused improvements are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) before opening an issue or pull request.
 
 ## License
 
